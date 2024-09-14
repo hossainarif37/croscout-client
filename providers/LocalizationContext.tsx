@@ -1,54 +1,76 @@
-"use client"
+"use client";
 
-import { createContext, ReactNode, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
-type SelectedLanguageType = string | null;
+import { supportedLngs } from "@/constant";
+import { getCurrentLng } from "@/utils/translation";
+
+type SelectedLanguageType = string;
 
 // Interface of Modal Context Props
 interface LocalizationContextProps {
-    selectedLanguage: SelectedLanguageType;
-    setSelectedLanguage: React.Dispatch<React.SetStateAction<SelectedLanguageType>>;
+  selectedLanguage: SelectedLanguageType;
+  setSelectedLanguage: React.Dispatch<
+    React.SetStateAction<SelectedLanguageType>
+  >;
 }
 
 // Created Context
-const LocalizationContext = createContext<LocalizationContextProps | null>(null);
+const LocalizationContext = createContext<LocalizationContextProps | null>(
+  null
+);
 
 interface LocalizationProviderProps {
-    children: ReactNode;
+  children: ReactNode;
 }
 
-const LocalizationProvider: React.FC<LocalizationProviderProps> = ({ children }) => {
+const LocalizationProvider: React.FC<LocalizationProviderProps> = ({
+  children,
+}) => {
+  //* States
+  const [selectedLanguage, setSelectedLanguage] = useState<string>("");
 
-    //* States
-    const [selectedLanguage, setSelectedLanguage] = useState<string | null>("");
+  useEffect(() => {
+    const lng: string = getCurrentLng();
 
-    useEffect(() => {
-        setSelectedLanguage(localStorage.getItem('selectedLanguage'))
-    }, []);
+    let language: string = "";
+    for (const key in supportedLngs) {
+      if (supportedLngs[key] === lng) {
+        language = key;
+        break;
+      }
+    }
+    setSelectedLanguage(language);
+  }, []);
 
+  // Context Values
+  const contextValue: LocalizationContextProps = {
+    selectedLanguage,
+    setSelectedLanguage,
+  };
 
-    // Context Values
-    const contextValue: LocalizationContextProps = {
-        selectedLanguage,
-        setSelectedLanguage
-    };
-
-    return (
-        <LocalizationContext.Provider value={contextValue}>
-            {children}
-        </LocalizationContext.Provider>
-    );
+  return (
+    <LocalizationContext.Provider value={contextValue}>
+      {children}
+    </LocalizationContext.Provider>
+  );
 };
 
 // Custom hook to consume the context
 const useLocalizationContext = () => {
-    const context = useContext(LocalizationContext);
+  const context = useContext(LocalizationContext);
 
-    if (!context) {
-        throw new Error("useModalContext must be used within a ModalProvider");
-    }
+  if (!context) {
+    throw new Error("useModalContext must be used within a ModalProvider");
+  }
 
-    return context;
+  return context;
 };
 
 export { LocalizationProvider, useLocalizationContext };
