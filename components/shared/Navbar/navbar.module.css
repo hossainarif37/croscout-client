@@ -11,8 +11,8 @@
 }
 
 .navUserMenu button {
-    @apply select-none font-semibold text-secondary-50 md:text-secondary hover:bg-secondary lg:hover:bg-slate-200 w-full text-left py-2 px-4 rounded-lg duration-150
+    @apply select-none font-semibold text-secondary-50 md:text-secondary hover:bg-secondary lg:hover:bg-slate-200 w-full text-center py-2 px-4 rounded-lg duration-150
 }
 .dashboardBtn  {
-    @apply select-none font-semibold text-secondary-50 md:text-secondary hover:bg-secondary lg:hover:bg-slate-200 w-full text-left py-2 px-4 rounded-lg duration-150
+    @apply select-none font-semibold text-secondary-50 md:text-secondary hover:bg-secondary lg:hover:bg-slate-200 w-full text-center py-2 px-4 rounded-lg duration-150
 }

@@ -91,7 +91,7 @@ const Footer = () => {
                 </div>
                 <div className="h-[1px] w-full bg-[#666060]"></div>
                 <div className="wrapper">
-                    <div className="flex flex-col md:flex-row justify-between text-white py-5">
+                    <div className="flex flex-col items-center md:flex-row md:justify-between text-white py-5">
                         <div className="text-lg font-medium">© {currentYear} Croscout, Inc.</div>
                         <div className="flex gap-4 md:gap-[32px] text-sm md:text-lg text-[#CBC9C9] font-medium">
                             <Link href="#">Terms</Link>

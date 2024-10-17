@@ -18,11 +18,12 @@ import { setCookie } from "cookies-next";
 import { removeCookie } from "@/utils/authCookie";
 import { sendVerificationEmail, verifyEmail } from "@/lib/database/verifyEmail";
 import { IoArrowBack, IoArrowForward } from "react-icons/io5";
+import { VscGlobe } from "react-icons/vsc";
+import { useLocalizationContext } from "@/providers/LocalizationContext";
 
 const Navbar = () => {
     const { navUserToggle, setNavUserToggle } = useToggleContext();
-    const { setLoginModal, setSignupModal, sidebarToggle,
-        setSidebarToggle } = useModalContext();
+    const { setLoginModal, setSignupModal, sidebarToggle, setSidebarToggle } = useModalContext();
     const { user, setUser } = useAuthContext();
 
     // navbar will be hidden if them pathname matches the include pathname
@@ -31,6 +32,8 @@ const Navbar = () => {
     const isDashboard = pathname.includes('/dashboard');
     const isVerifyEmail = pathname.includes('/verify-email');
     const router = useRouter();
+    const { selectedLanguage, } = useLocalizationContext();
+    const { setLanguageModal } = useModalContext();
 
     const handleLogout = async () => {
         try {
@@ -72,7 +75,7 @@ const Navbar = () => {
             }
             <nav hidden={isResetPassword || isVerifyEmail} id="topbar" className={`py-5   z-40 sticky top-0 ${isDashboard ? "bg-[#182237]" : "bg-primary"}`}>
                 {/* Wrapper */}
-                <div className={` flex-between items-center relative ${isDashboard ? "w-full px-6" : "wrapper"}`}>
+                <div className={`flex justify-between items-center relative ${isDashboard ? "w-full px-6" : "wrapper"}`}>
                     <div className="text-white lg:hidden">
                         {isDashboard && <div
                             onClick={handleSidebarToggle}
@@ -97,6 +100,18 @@ const Navbar = () => {
 
                     {/* User Menu Dropdown */}
                     <ul className={`${navbarStyles.navUserMenu} ${navUserToggle ? "scale-y-100" : "scale-y-0"}`}>
+                        <ul className={`md:hidden text-secondary-50 flex items-center flex-col justify-center font-bold gap-7 ${navbarStyles.navMenu} px-4`}>
+                            <li>
+                                <Link
+                                    onClick={() => setLanguageModal(true)}
+                                    href={''} className="flex items-center space-x-2">
+                                    <span><VscGlobe /> </span>
+                                    <span>{selectedLanguage ? selectedLanguage : 'English'}</span>
+                                </Link>
+                            </li>
+                            <li><Link href="#">€EUR</Link></li>
+                            <li><Link href="#">Croscout Your Home</Link></li>
+                        </ul>
                         {
                             user ?
                                 <>
@@ -128,7 +143,11 @@ const Navbar = () => {
                                         }}
                                     >Signup</button>
                                 </>
+
+
                         }
+
+                        
                     </ul>
                 </div>
             </nav >
