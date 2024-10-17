@@ -143,11 +143,7 @@ const Navbar = () => {
                                         }}
                                     >Signup</button>
                                 </>
-
-
                         }
-
-                        
                     </ul>
                 </div>
             </nav >

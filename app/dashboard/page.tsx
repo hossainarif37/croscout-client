@@ -109,10 +109,10 @@ const Dashboard = () => {
                         <StatisticsCard item={item} key={item.id} />
                     ))}
                 </div>
-                <div className="my-5">
+                {(latestBookings && latestBookings.length > 0) && <div className="my-5">
                     <Transactions dashboardStats={latestBookings} />
-                </div>
-                <Chart />
+                </div>}
+                {/* <Chart /> */}
             </div>
         </div>
     );
