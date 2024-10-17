@@ -45,59 +45,69 @@ const LoginForm = () => {
     };
 
     // handle login
+    // handle login
     const onSubmit: SubmitHandler<Inputs> = async (data) => {
         const dataEmail = data.email.toLowerCase();
         const password = data.password;
-        const fullData = { email: dataEmail, password }
+        const fullData = { email: dataEmail, password };
+
         try {
             setIsLoading(true);
 
             // Forgot Password functionality
             if (isForgotMode) {
                 const dbResponse = await forgotRequest({ email: dataEmail });
+
                 if (dbResponse.success) {
                     toast.success(dbResponse?.message, { duration: 5000 });
                     setLoginModal(false);
                     setIsForgotMode(false);
-                }
-                else {
+                } else {
                     toast.error(dbResponse.error);
                 }
             }
 
             // Login functionality
             else {
-                const dbResponse = await loginUser({ data: fullData })
+                const dbResponse = await loginUser({ data: fullData });
+
                 if (dbResponse?.success) {
                     toast.success(dbResponse?.message);
-                    storeToken(dbResponse.token);
-                    setUser(dbResponse.user);
-                    const token = getStoredToken();
+
+                    // Using Promise.all to store token and set user simultaneously
+                    const token = dbResponse.token;
                     const userRole = dbResponse?.user?.role;
-                    if (token) {
-                        setCookie("authToken", token.split(" ")[1], 24)
-                        if ((userRole === "agent") || (userRole === "admin")) {
-                            router.push('/dashboard')
-                            setLoginModal(false);
-                            // setLoginModal
-                        }
-                        else if (userRole === "user") {
+
+                    await Promise.all([
+                        storeToken(token),
+                        setUser(dbResponse.user)
+                    ]);
+
+                    const storedToken = getStoredToken();
+                    if (storedToken) {
+                        setCookie("authToken", storedToken.split(" ")[1], 24);
+
+                        // Navigate based on the role
+                        if (userRole === "agent" || userRole === "admin") {
+                            router.push('/dashboard');
+                        } else if (userRole === "user") {
                             router.push('/dashboard/user/my-bookings');
-                            setLoginModal(false);
                         }
+
+                        setLoginModal(false);
                     }
-                }
-                else {
+                } else {
                     toast.error(dbResponse.error);
                 }
             }
-
-            setIsLoading(false);
         } catch (error) {
-            setIsLoading(false);
             console.log(error);
+        } finally {
+            // Ensuring loading state is reset in any case
+            setIsLoading(false);
         }
-    }
+    };
+
 
     const handleForgotMode = () => {
         setIsForgotMode(!isForgotMode);
