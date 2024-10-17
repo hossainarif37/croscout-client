@@ -96,9 +96,9 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         };
     }, [token, isUpdateProfile]);
 
-    if (loading) {
-        return <Loading />
-    }
+    // if (loading) {
+    //     return <Loading />
+    // }
 
     // Context Values
     const contextValue: AuthContextProps = {
